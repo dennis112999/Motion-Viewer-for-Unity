@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 namespace Dennis.Tools.MotionViewer
 {
@@ -22,7 +23,17 @@ namespace Dennis.Tools.MotionViewer
 
         public void SaveMotionView(MotionViewerSO motionViewerSO)
         {
-            _motionViewerSO = motionViewerSO;
+            _motionViewerSO.ClearMotionData();
+
+            foreach (var data in motionViewerSO.MotionDatas)
+            {
+                _motionViewerSO.AddMotionData(new MotionData(
+                    data.MotionName,
+                    data.Description,
+                    data.AnimationClip,
+                    data.MotionPhoto
+                ));
+            }
 
             EditorUtility.DisplayDialog(
                 "Save Successful", 

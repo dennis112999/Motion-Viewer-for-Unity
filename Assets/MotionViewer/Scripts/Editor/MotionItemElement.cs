@@ -3,6 +3,8 @@ using UnityEngine;
 
 using UnityEditor.UIElements;
 using System;
+using Dennis.Tools.EditorWindow;
+using UnityEditor;
 
 namespace Dennis.Tools.MotionViewer
 {
@@ -28,7 +30,6 @@ namespace Dennis.Tools.MotionViewer
 
             // Create MotionPhoto Preview
             Image previewImage = CreateMotionPhotoPreview();
-            Add(previewImage);
 
             // Create MotionPhoto Sprite ObjectField
             ObjectField MotionPhotoObjectField = UIHelper.CreateObjectField<Sprite>(
@@ -106,5 +107,6 @@ namespace Dennis.Tools.MotionViewer
         {
             _onRemoveButtonClick?.Invoke(_motionData);
         }
+
     }
 }

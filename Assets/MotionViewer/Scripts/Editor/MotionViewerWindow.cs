@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace Dennis.Tools.MotionViewer
 {
-    public class MotionViewerWindow : EditorWindow
+    public class MotionViewerWindow : UnityEditor.EditorWindow
     {
         private MotionViewerSO _motionViewerSO;
 

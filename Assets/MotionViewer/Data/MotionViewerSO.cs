@@ -36,6 +36,13 @@ namespace Dennis.Tools.MotionViewer
             return motionData;
         }
 
+        public MotionData AddMotionData(MotionData motionData)
+        {
+            MotionDatas.Add(motionData);
+
+            return motionData;
+        }
+
         public void RemoveMotionData(MotionData motionData)
         {
             if (MotionDatas.Contains(motionData))
@@ -48,6 +55,11 @@ namespace Dennis.Tools.MotionViewer
                 Debug.LogWarning($"[MotionViewerSO] Failed to remove: MotionData instance not found.\nName: {motionData?.MotionName ?? "null"}");
 #endif
             }
+        }
+
+        public void ClearMotionData()
+        {
+            MotionDatas.Clear();
         }
     }
 }

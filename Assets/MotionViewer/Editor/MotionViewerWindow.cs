@@ -15,6 +15,7 @@ namespace Dennis.Tools.MotionViewer
 
         private ScrollView _motionListView;
 
+        private MotionSaveUtility _motionSaveUtility;
 
         /// <summary>
         /// 
@@ -48,6 +49,8 @@ namespace Dennis.Tools.MotionViewer
         /// </summary>
         private void Load(MotionViewerSO motionViewerSO)
         {
+            _motionSaveUtility = MotionSaveUtility.GetInstance();
+            _motionViewerSO = _motionSaveUtility.LoadMotionView(motionViewerSO);
 
             RefreshMotionList();
         }
@@ -135,10 +138,14 @@ namespace Dennis.Tools.MotionViewer
 
         private void SaveData()
         {
+            _motionSaveUtility.SaveMotionView(_motionViewerSO);
         }
 
         private void LoadData()
         {
+            _motionViewerSO = _motionSaveUtility.LoadMotionView();
+
+            RefreshMotionList();
         }
 
         #endregion Save Load

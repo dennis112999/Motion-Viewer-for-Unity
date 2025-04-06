@@ -25,7 +25,7 @@ namespace Dennis.Tools.MotionViewer
 
         // Control Parameters
         private float _rotationY = 0f;
-        private float _animationSpeed = 1f;
+        private float _animationSpeed = 0.5f;
         private bool _isPlaying = true;
         private bool _isScreenshot = false;
 

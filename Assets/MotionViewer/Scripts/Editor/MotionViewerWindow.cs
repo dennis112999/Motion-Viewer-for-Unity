@@ -12,6 +12,12 @@ namespace Dennis.Tools.MotionViewer
     public class MotionViewerWindow : UnityEditor.EditorWindow
     {
         private MotionViewerSO _motionViewerSO;
+        private GameObject _modelPrefab;
+        public GameObject ModelPrefab
+        {
+            get { return _modelPrefab; }
+            private set { _modelPrefab = value; }
+        }
 
         private ScrollView _motionListView;
 
@@ -80,6 +86,13 @@ namespace Dennis.Tools.MotionViewer
             toolbar.Add(ClearButton);
 
             toolbar.Add(new ToolbarSpacer { style = { flexGrow = 1 } });
+
+            // Add GameObject ObjectField
+            ObjectField ModelObjectField = UIHelper.CreateObjectField<GameObject>(
+               _modelPrefab,
+               (newGameObject) => { _modelPrefab = newGameObject; }
+            );
+            toolbar.Add(ModelObjectField);
 
             // Add Add motion Button
             Button AddMotionButton = UIHelper.CreateButton("Add Motion", () => AddMotionData(), "motion-add-button");

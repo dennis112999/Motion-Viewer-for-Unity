@@ -13,7 +13,7 @@ namespace Dennis.Tools.MotionViewer
         private PreviewRenderUtility _previewRenderUtility;
         private GameObject _previewGO;
         private Animator _animator;
-        private RuntimeAnimatorController _controller;
+        private MotionData _motionData;
 
         // Preview Settings
         private Vector2 _previewSize = new Vector2(640, 640);
@@ -32,13 +32,13 @@ namespace Dennis.Tools.MotionViewer
         // Setting
         private string _savePath;
 
-        public static void Open(GameObject modelPrefab, RuntimeAnimatorController clip)
+        public static void Open(GameObject modelPrefab, MotionData motionData)
         {
             var window = CreateInstance<MotionPreviewWindow>();
             window.titleContent = new GUIContent("Motion Preview");
             window.minSize = new Vector2(640, 900);
             window.maxSize = new Vector2(640, 900);
-            window.Initialize(modelPrefab, clip);
+            window.Initialize(modelPrefab, motionData);
             window.ShowUtility();
         }
 
@@ -80,11 +80,11 @@ namespace Dennis.Tools.MotionViewer
             }
         }
 
-        private void Initialize(GameObject modelPrefab, RuntimeAnimatorController controller)
+        private void Initialize(GameObject modelPrefab, MotionData motionData)
         {
             InitializeGUIStyle();
 
-            _controller = controller;
+            _motionData = motionData;
 
             // Instantiate Model
             _previewGO = _previewRenderUtility.InstantiatePrefabInScene(modelPrefab);
@@ -104,7 +104,7 @@ namespace Dennis.Tools.MotionViewer
                 _animator = _previewGO.AddComponent<Animator>();
             }
 
-            _animator.runtimeAnimatorController = _controller;
+            _animator.runtimeAnimatorController = _motionData.RuntimeAnimatorController;
 
             _textureRect = new Rect(0, 0, _previewSize.x, _previewSize.y);
         }
@@ -115,7 +115,7 @@ namespace Dennis.Tools.MotionViewer
 
             // Add Animtion Name
             GUILayout.Space(5);
-            GUILayout.Label($"Animation Name : {_controller.name}", EditorStyles.boldLabel);
+            GUILayout.Label($"Animation Name : {_motionData.MotionName}", EditorStyles.boldLabel);
             GUILayout.Space(5);
 
             RenderPreview();

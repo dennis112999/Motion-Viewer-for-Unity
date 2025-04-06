@@ -142,7 +142,7 @@ namespace Dennis.Tools.MotionViewer
                 return;
             }
 
-            MotionPreviewWindow.Open(_motionViewerWindow.ModelPrefab, _motionData.RuntimeAnimatorController);
+            MotionPreviewWindow.Open(_motionViewerWindow.ModelPrefab, _motionData);
         }
 
         #endregion Button

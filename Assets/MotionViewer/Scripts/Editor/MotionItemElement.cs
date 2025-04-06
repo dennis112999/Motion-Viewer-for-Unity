@@ -10,14 +10,16 @@ namespace Dennis.Tools.MotionViewer
     public class MotionItemElement : VisualElement
     {
         private MotionData _motionData;
+        private MotionViewerWindow _motionViewerWindow;
 
         public MotionData MotionData { get { return _motionData; } }
 
         private Action<MotionData> _onRemoveButtonClick;
 
-        public MotionItemElement(MotionData motion, Action<MotionData> OnCallBack = null)
+        public MotionItemElement(MotionData motion, MotionViewerWindow motionViewerWindow, Action<MotionData> OnCallBack = null)
         {
             _motionData = motion;
+            _motionViewerWindow = motionViewerWindow;
             _onRemoveButtonClick = OnCallBack;
 
             InitUIElements();
@@ -29,6 +31,15 @@ namespace Dennis.Tools.MotionViewer
 
             // Create MotionPhoto Preview
             Image previewImage = CreateMotionPhotoPreview();
+
+            // Create Preview Button
+            Button previewButton = UIHelper.CreateButton(
+                "",
+                () => OnPreviewButtonClick(),
+                "motion-image-button"
+            );
+            previewButton.Add(previewImage);
+            Add(previewButton);
 
             // Create MotionPhoto Sprite ObjectField
             ObjectField MotionPhotoObjectField = UIHelper.CreateObjectField<Sprite>(
@@ -102,10 +113,38 @@ namespace Dennis.Tools.MotionViewer
             return previewImage;
         }
 
+        #region Button
+
         private void OnRemoveButtonClick()
         {
             _onRemoveButtonClick?.Invoke(_motionData);
         }
 
+        private void OnPreviewButtonClick()
+        {
+            if(_motionViewerWindow.ModelPrefab == null)
+            {
+                EditorUtility.DisplayDialog(
+                    "Missing Model Prefab",
+                    "Please assign a Model Prefab in the Motion Viewer before previewing.",
+                    "OK"
+                );
+                return;
+            }
+
+            if (_motionData.RuntimeAnimatorController == null)
+            {
+                EditorUtility.DisplayDialog(
+                    "Missing Animator Controller",
+                    $"Motion '{_motionData.MotionName}' does not have a RuntimeAnimatorController assigned.",
+                    "OK"
+                );
+                return;
+            }
+
+            MotionPreviewWindow.Open(_motionViewerWindow.ModelPrefab, _motionData.RuntimeAnimatorController);
+        }
+
+        #endregion Button
     }
 }

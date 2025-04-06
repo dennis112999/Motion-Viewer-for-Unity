@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace Dennis.Tools.MotionViewer
 {
-    public class MotionViewerWindow : UnityEditor.EditorWindow
+    public class MotionViewerWindow : EditorWindow
     {
         private MotionViewerSO _motionViewerSO;
         private GameObject _modelPrefab;
@@ -123,7 +123,7 @@ namespace Dennis.Tools.MotionViewer
 
             foreach (MotionData motion in _motionViewerSO.MotionDatas)
             {
-                MotionItemElement item = new MotionItemElement(motion, RemoveMotionData);
+                MotionItemElement item = new MotionItemElement(motion, this, RemoveMotionData);
                 _motionListView.Add(item);
             }
         }
@@ -132,7 +132,7 @@ namespace Dennis.Tools.MotionViewer
         {
             MotionData newMotionData = _motionViewerSO.AddMotionData();
 
-            MotionItemElement item = new MotionItemElement(newMotionData, RemoveMotionData);
+            MotionItemElement item = new MotionItemElement(newMotionData, this, RemoveMotionData);
             _motionListView.Add(item);
         }
 

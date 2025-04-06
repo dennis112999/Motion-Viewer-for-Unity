@@ -1,5 +1,10 @@
 /* MotionViewer.uss */
 
+.motion-toolbar-box {
+    flex-direction: row;
+    align-items: center;
+}
+
 .motion-item {
     flex-direction: row;
     margin-bottom: 4px;

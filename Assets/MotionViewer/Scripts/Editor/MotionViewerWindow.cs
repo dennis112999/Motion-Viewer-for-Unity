@@ -87,12 +87,20 @@ namespace Dennis.Tools.MotionViewer
 
             toolbar.Add(new ToolbarSpacer { style = { flexGrow = 1 } });
 
+            Box box = UIHelper.CreateBox("motion-toolbar-box");
+
+            // Add Label
+            Label modelLabel = UIHelper.CreateLabel("Model Prefab :");
+            box.Add(modelLabel);
+
             // Add GameObject ObjectField
             ObjectField ModelObjectField = UIHelper.CreateObjectField<GameObject>(
                _modelPrefab,
                (newGameObject) => { _modelPrefab = newGameObject; }
             );
-            toolbar.Add(ModelObjectField);
+            box.Add(ModelObjectField);
+
+            toolbar.Add(box);
 
             // Add Add motion Button
             Button AddMotionButton = UIHelper.CreateButton("Add Motion", () => AddMotionData(), "motion-add-button");

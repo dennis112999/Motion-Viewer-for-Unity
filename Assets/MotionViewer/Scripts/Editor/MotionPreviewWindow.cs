@@ -20,18 +20,22 @@ namespace Dennis.Tools.MotionViewer
         private Rect _textureRect;
 
         // UI Style
+        private GUIStyle _miniTitleStyle;
         private GUIStyle _boxStyle;
 
         // Control Parameters
         private float _rotationY = 0f;
         private float _animationSpeed = 1f;
         private bool _isPlaying = true;
+        private bool _isScreenshot = false;
+
+        // Setting
+        private string _savePath;
 
         public static void Open(GameObject modelPrefab, RuntimeAnimatorController clip)
         {
             var window = CreateInstance<MotionPreviewWindow>();
             window.titleContent = new GUIContent("Motion Preview");
-            window.maxSize = new Vector2(640, 1500);
             window.minSize = new Vector2(640, 900);
             window.maxSize = new Vector2(640, 900);
             window.Initialize(modelPrefab, clip);
@@ -41,6 +45,8 @@ namespace Dennis.Tools.MotionViewer
         private void OnEnable()
         {
             _previewRenderUtility = new PreviewRenderUtility();
+
+            _savePath = SavePathManager.GetSavePath();
         }
 
         private void OnDisable()
@@ -55,6 +61,17 @@ namespace Dennis.Tools.MotionViewer
 
         private void InitializeGUIStyle()
         {
+            if (_miniTitleStyle == null)
+            {
+                _miniTitleStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 15,
+                    fontStyle = FontStyle.Bold,
+                    alignment = TextAnchor.MiddleLeft
+                };
+                _miniTitleStyle.normal.textColor = Color.white;
+            }
+
             if (_boxStyle == null)
             {
                 _boxStyle = new GUIStyle(GUI.skin.box);
@@ -105,6 +122,7 @@ namespace Dennis.Tools.MotionViewer
             DrawRotationSlider();
             DrawSpeedSlider();
             DrawPlayToggle();
+            DrawSaveSettingsAndScreenshot();
 
             Repaint();
         }
@@ -117,6 +135,8 @@ namespace Dennis.Tools.MotionViewer
 
         private void RenderPreview()
         {
+            if (_isScreenshot) return;
+
             if (_animator != null && _isPlaying)
             {
                 _animator.speed = _animationSpeed;
@@ -205,6 +225,77 @@ namespace Dennis.Tools.MotionViewer
 
             GUILayout.EndHorizontal();
             return value;
+        }
+
+        private void DrawSaveSettingsAndScreenshot()
+        {
+            GUILayout.Space(10);
+
+            // Section title
+            EditorGUILayout.LabelField("Save Path", _miniTitleStyle);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            EditorGUILayout.BeginVertical("box");
+
+            // Save path field and browse button
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.TextField(_savePath);
+            if (GUILayout.Button("Browse", GUILayout.MaxWidth(80)))
+            {
+                _savePath = SavePathManager.BrowseSavePath();
+            }
+
+            // Take Screenshot Button
+            if (GUILayout.Button("Take Screenshot", GUILayout.MinWidth(120)))
+            {
+                _isScreenshot = true;
+
+                if (string.IsNullOrEmpty(_savePath))
+                {
+                    _savePath = EditorUtility.SaveFolderPanel(
+                            "Path to Save Images",
+                            _savePath,
+                            Application.dataPath
+                    );
+                }
+
+                CaptureScreenshot();
+            }
+
+            EditorGUILayout.EndHorizontal();
+
+            // Info message
+            EditorGUILayout.HelpBox("Choose the folder where screenshots will be saved.", MessageType.Info);
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.Space();
+        }
+
+        /// <summary>
+        /// Executes the screenshot capture process
+        /// </summary>
+        public void CaptureScreenshot()
+        {
+            Texture2D tex = CapturePreviewTexture();
+
+            string fileName = ScreenshotCapturer.Capture(_savePath, tex);
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                ShowNotification(new GUIContent("Screenshot taken!"));
+
+                Application.OpenURL("file://" + fileName);
+
+                _isScreenshot = false;
+            }
+        }
+
+        /// <summary>
+        /// Capture Preview Texture
+        /// </summary>
+        /// <returns>Preview Texture2D</returns>
+        private Texture2D CapturePreviewTexture()
+        {
+            RenderTexture rt = _previewRenderUtility.camera.targetTexture;
+            return ScreenshotCapturer.RenderTextureToTexture2D(rt);
         }
     }
 }

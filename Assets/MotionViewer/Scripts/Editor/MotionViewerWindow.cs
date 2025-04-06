@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using System.Linq;
 
 using UnityEditor;
@@ -210,3 +212,5 @@ namespace Dennis.Tools.MotionViewer
     }
 
 }
+
+#endif

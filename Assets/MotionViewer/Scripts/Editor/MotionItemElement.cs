@@ -1,4 +1,6 @@
-﻿using UnityEngine.UIElements;
+﻿#if UNITY_EDITOR
+
+using UnityEngine.UIElements;
 using UnityEngine;
 
 using UnityEditor.UIElements;
@@ -148,3 +150,5 @@ namespace Dennis.Tools.MotionViewer
         #endregion Button
     }
 }
+
+#endif

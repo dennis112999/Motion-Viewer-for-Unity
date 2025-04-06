@@ -1,6 +1,7 @@
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
-using static Unity.VisualScripting.Member;
 
 namespace Dennis.Tools.MotionViewer
 {
@@ -79,3 +80,5 @@ namespace Dennis.Tools.MotionViewer
 
     }
 }
+
+#endif

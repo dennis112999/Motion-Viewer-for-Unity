@@ -22,9 +22,9 @@
 }
 
 .motion-image-frame {
-    min-width: 64px;
-    width: 64px;
-    height: 64px;
+    min-width: 128px;
+    width: 128px;
+    height: 128px;
     border-width: 1px;
     border-color: gray;
 }
@@ -32,8 +32,8 @@
 .motion-image-button {
     padding: 0;
     background-color: transparent;
-    width: 64px;
-    height: 64px;
+    width: 128px;
+    height: 128px;
 }
 
 .motion-image-placeholder {

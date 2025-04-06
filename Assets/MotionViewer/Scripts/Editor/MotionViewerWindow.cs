@@ -39,8 +39,8 @@ namespace Dennis.Tools.MotionViewer
                 // Make a unity editor window of type MotionViewerWindow
                 MotionViewerWindow window = (MotionViewerWindow)GetWindow(typeof(MotionViewerWindow));
                 window.titleContent = new GUIContent("Motion Viewer");
-                window.minSize = new Vector2(500, 250);
-                window.maxSize = new Vector2(870, 1000);
+                window.minSize = new Vector2(925, 250);
+                window.maxSize = new Vector2(925, 1000);
 
                 // Load in MotionViewerSO data in to the editor window
                 window.Load(motionViewerSO);

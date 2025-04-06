@@ -112,10 +112,41 @@ namespace Dennis.Tools.MotionViewer
 
         private void GenerateScrollView()
         {
+            var contentBox = new VisualElement();
+            contentBox.style.flexGrow = 1;
+            contentBox.style.flexDirection = FlexDirection.Column;
+
+            AddMotionListHeader(contentBox);
+
             _motionListView = new ScrollView();
             _motionListView.style.flexGrow = 1;
-            _motionListView.style.marginTop = 5;
-            rootVisualElement.Add(_motionListView);
+            contentBox.Add(_motionListView);
+
+            rootVisualElement.Add(contentBox);
+        }
+
+        private void AddMotionListHeader(VisualElement parent)
+        {
+            var header = new VisualElement();
+            header.AddToClassList("motion-list-header");
+
+            header.Add(CreateHeaderLabel("Preview", "motion-header-preview"));
+            header.Add(new Label("|"));
+            header.Add(CreateHeaderLabel("Name", "motion-header-name"));
+            header.Add(new Label("|"));
+            header.Add(CreateHeaderLabel("Description", "motion-header-desc"));
+            header.Add(new Label("|"));
+            header.Add(CreateHeaderLabel("Controller", "motion-header-clip"));
+            header.Add(new Label("|"));
+
+            parent.Add(header);
+        }
+
+        private Label CreateHeaderLabel(string text, string className)
+        {
+            Label label = UIHelper.CreateLabel(text, className);
+            label.style.unityTextAlign = TextAnchor.MiddleCenter;
+            return label;
         }
 
         private void RefreshMotionList()

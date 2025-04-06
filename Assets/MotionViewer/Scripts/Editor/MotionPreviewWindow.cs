@@ -32,6 +32,8 @@ namespace Dennis.Tools.MotionViewer
             var window = CreateInstance<MotionPreviewWindow>();
             window.titleContent = new GUIContent("Motion Preview");
             window.maxSize = new Vector2(640, 1500);
+            window.minSize = new Vector2(640, 900);
+            window.maxSize = new Vector2(640, 900);
             window.Initialize(modelPrefab, clip);
             window.ShowUtility();
         }

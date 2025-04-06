@@ -111,7 +111,7 @@ namespace Dennis.Tools.MotionViewer
 
         private void OnGUI()
         {
-            RotationModel();
+            UpdateCameraRotation();
 
             // Add Animtion Name
             GUILayout.Space(5);
@@ -127,10 +127,28 @@ namespace Dennis.Tools.MotionViewer
             Repaint();
         }
 
-        private void RotationModel()
+        private void UpdateCameraRotation()
         {
             if (_previewGO == null) return;
-            _previewGO.transform.rotation = Quaternion.Euler(0, _rotationY, 0);
+
+            var cam = _previewRenderUtility.camera;
+
+            // Calculate the combined bounds of all renderers in the preview object
+            Bounds bounds = new Bounds(_previewGO.transform.position, Vector3.zero);
+            foreach (var renderer in _previewGO.GetComponentsInChildren<Renderer>())
+            {
+                bounds.Encapsulate(renderer.bounds);
+            }
+
+            Vector3 center = bounds.center;
+            float distance = bounds.size.magnitude * 2f;
+
+            // Calculate the camera's position based on rotation around the model
+            Vector3 offset = Quaternion.Euler(0, _rotationY, 0) * new Vector3(0, bounds.extents.y * 0.3f, -distance * 2.0f);
+
+            // Set camera position and orientation
+            cam.transform.position = center + offset;
+            cam.transform.LookAt(center);
         }
 
         private void RenderPreview()

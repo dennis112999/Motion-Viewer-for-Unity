@@ -30,7 +30,7 @@ namespace Dennis.Tools.MotionViewer
                 _motionViewerSO.AddMotionData(new MotionData(
                     data.MotionName,
                     data.Description,
-                    data.AnimationClip,
+                    data.RuntimeAnimatorController,
                     data.MotionPhoto
                 ));
             }
@@ -69,7 +69,7 @@ namespace Dennis.Tools.MotionViewer
                 tmpSO.AddMotionData(new MotionData(
                     data.MotionName,
                     data.Description,
-                    data.AnimationClip,
+                    data.RuntimeAnimatorController,
                     data.MotionPhoto
                 ));
             }

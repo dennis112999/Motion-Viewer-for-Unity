@@ -10,15 +10,14 @@ namespace Dennis.Tools.MotionViewer
         public Sprite MotionPhoto;
         public string MotionName;
         public string Description;
-        public AnimationClip AnimationClip;
+        public RuntimeAnimatorController RuntimeAnimatorController;
 
-
-        public MotionData(string motionName, string desc, AnimationClip animationClip = null, Sprite motionPhoto = null)
+        public MotionData(string motionName, string desc, RuntimeAnimatorController animatorController = null, Sprite motionPhoto = null)
         {
             MotionPhoto = motionPhoto;
             MotionName = motionName;
             Description = desc;
-            AnimationClip = animationClip;
+            RuntimeAnimatorController = animatorController;
         }
     }
 

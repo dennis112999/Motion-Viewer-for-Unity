@@ -3,7 +3,6 @@ using UnityEngine;
 
 using UnityEditor.UIElements;
 using System;
-using Dennis.Tools.EditorWindow;
 using UnityEditor;
 
 namespace Dennis.Tools.MotionViewer
@@ -69,10 +68,10 @@ namespace Dennis.Tools.MotionViewer
             );
             Add(descField);
 
-            // Create AnimationClip ObjectField
-            ObjectField animationField = UIHelper.CreateObjectField<AnimationClip>(
-                _motionData.AnimationClip,
-                (clip) => _motionData.AnimationClip = clip,
+            // Create RuntimeAnimatorController ObjectField
+            ObjectField animationField = UIHelper.CreateObjectField<RuntimeAnimatorController>(
+                _motionData.RuntimeAnimatorController,
+                (runtimeAnimatorController) => _motionData.RuntimeAnimatorController = runtimeAnimatorController,
                 "motion-clip-field"
             );
             Add(animationField);

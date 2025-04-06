@@ -1,0 +1,67 @@
+/* MotionViewer.uss */
+
+.motion-item {
+    flex-direction: row;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom-width: 1px;
+    border-bottom-color: #888;
+    align-items: center;
+}
+
+.motion-add-button {
+    width: 100px;
+    height: 17px;
+    font-size: 12px;
+    align-self: center;
+}
+
+.motion-image-frame {
+    min-width: 64px;
+    width: 64px;
+    height: 64px;
+    border-width: 1px;
+    border-color: gray;
+}
+
+.motion-image-button {
+    padding: 0;
+    background-color: transparent;
+    width: 64px;
+    height: 64px;
+}
+
+.motion-image-placeholder {
+    background-color: #333;
+}
+
+.motion-photo-field {
+    min-width: 180px;
+    flex-grow: 1;
+    margin-left: 10px;
+    width: auto;
+}
+
+.motion-name {
+    min-width: 150px;
+    margin-right: 10px;
+}
+
+.motion-desc {
+    min-width: 150px;
+    flex-grow: 1;
+}
+
+.motion-clip-field {
+    width: 180px;
+    margin-left: 10px;
+}
+
+.motion-remove-button {
+    min-width: 60px;
+    width: 60px;
+    height: 24px;
+    margin-left: 8px;
+    align-self: center;
+    padding: 0;
+}

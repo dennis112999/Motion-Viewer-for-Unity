@@ -24,6 +24,7 @@ namespace Dennis.Tools.MotionViewer
 
         // Control Parameters
         private float _rotationY = 0f;
+        private float _animationSpeed = 1f;
 
         public static void Open(GameObject modelPrefab, RuntimeAnimatorController clip)
         {
@@ -98,7 +99,8 @@ namespace Dennis.Tools.MotionViewer
             GUILayout.Space(5);
 
             RenderPreview();
-            DrawHorizontalSlider();
+            DrawRotationSlider();
+            DrawSpeedSlider();
 
             Repaint();
         }
@@ -113,6 +115,7 @@ namespace Dennis.Tools.MotionViewer
         {
             if (_animator != null)
             {
+                _animator.speed = _animationSpeed;
                 _animator.Update(Time.deltaTime);
             }
 
@@ -124,7 +127,7 @@ namespace Dennis.Tools.MotionViewer
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
 
-            // 外框
+            // Preview Frame
             GUILayout.BeginVertical(_boxStyle);
             GUILayout.Box(tex, GUIStyle.none, GUILayout.Width(tex.width), GUILayout.Height(tex.height));
             GUILayout.EndVertical();
@@ -133,22 +136,48 @@ namespace Dennis.Tools.MotionViewer
             GUILayout.EndHorizontal();
         }
 
-        private void DrawHorizontalSlider()
+        private void DrawRotationSlider()
         {
-            // HorizontalSlider：0 -> 360
+            _rotationY = DrawLabeledSlider(
+                "Model Rotation",
+                _rotationY,
+                0f,
+                360f,
+                "°",
+                0f,
+                "Reset Rotation"
+            );
+        }
+
+        private void DrawSpeedSlider()
+        {
+            _animationSpeed = DrawLabeledSlider(
+                "Animation Speed", 
+                _animationSpeed, 
+                0f, 
+                2f, 
+                "x", 
+                1f, 
+                "Reset Speed"
+            );
+        }
+
+        private float DrawLabeledSlider(string label, float value, float min, float max, string unit, float resetValue, string resetLabel)
+        {
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Model Rotation", GUILayout.Width(100));
-            _rotationY = GUILayout.HorizontalSlider(_rotationY, 0, 360f);
-            GUILayout.Label($"{_rotationY:F0}°", GUILayout.Width(50));
 
-            // Add Reset Button
-            if (GUILayout.Button("Reset Rotation", GUILayout.Width(120)))
+            GUILayout.Label(label, GUILayout.Width(100));
+            value = GUILayout.HorizontalSlider(value, min, max);
+            GUILayout.Label($"{value:F2}{unit}", GUILayout.Width(50));
+
+            if (GUILayout.Button(resetLabel, GUILayout.Width(120)))
             {
-                _rotationY = 0f;
+                value = resetValue;
             }
 
             GUILayout.EndHorizontal();
+            return value;
         }
     }
 }

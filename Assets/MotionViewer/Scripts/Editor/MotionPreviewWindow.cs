@@ -25,6 +25,7 @@ namespace Dennis.Tools.MotionViewer
         // Control Parameters
         private float _rotationY = 0f;
         private float _animationSpeed = 1f;
+        private bool _isPlaying = true;
 
         public static void Open(GameObject modelPrefab, RuntimeAnimatorController clip)
         {
@@ -101,6 +102,7 @@ namespace Dennis.Tools.MotionViewer
             RenderPreview();
             DrawRotationSlider();
             DrawSpeedSlider();
+            DrawPlayToggle();
 
             Repaint();
         }
@@ -113,7 +115,7 @@ namespace Dennis.Tools.MotionViewer
 
         private void RenderPreview()
         {
-            if (_animator != null)
+            if (_animator != null && _isPlaying)
             {
                 _animator.speed = _animationSpeed;
                 _animator.Update(Time.deltaTime);
@@ -160,6 +162,29 @@ namespace Dennis.Tools.MotionViewer
                 1f, 
                 "Reset Speed"
             );
+        }
+
+        private void DrawPlayToggle()
+        {
+            GUILayout.Space(10);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Animation Control", GUILayout.Width(120));
+
+            if (GUILayout.Button(_isPlaying ? "Stop" : "Play", GUILayout.Width(100)))
+            {
+                _isPlaying = !_isPlaying;
+
+                if (_isPlaying)
+                {
+                    _animator.Play(0);
+                }
+                else
+                {
+                    _animator.speed = 0f;
+                }
+            }
+
+            GUILayout.EndHorizontal();
         }
 
         private float DrawLabeledSlider(string label, float value, float min, float max, string unit, float resetValue, string resetLabel)

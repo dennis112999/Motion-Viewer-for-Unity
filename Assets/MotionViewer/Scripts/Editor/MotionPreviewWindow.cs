@@ -36,15 +36,61 @@ namespace Dennis.Tools.MotionViewer
         // Setting
         private string _savePath;
 
-        public static MotionPreviewWindow Open(GameObject modelPrefab, MotionData motionData)
+        private bool _isLoaded;
+
+        public static void Open(GameObject modelPrefab, MotionData motionData)
         {
-            var window = CreateInstance<MotionPreviewWindow>();
+            MotionPreviewWindow window = GetWindow<MotionPreviewWindow>("Motion Preview");
             window.titleContent = new GUIContent("Motion Preview");
             window.minSize = new Vector2(640, 900);
             window.maxSize = new Vector2(640, 900);
+
+            window.ResetPreview();
             window.Initialize(modelPrefab, motionData);
+
             window.ShowUtility();
-            return window;
+        }
+
+        private void ResetPreview()
+        {
+            if (!_isLoaded) return;
+
+            // Clear the previous preview GameObject
+            if (_previewGO != null)
+            {
+                DestroyImmediate(_previewGO);
+                _previewGO = null;
+            }
+
+            // Clear previous Animator and Controller references
+            _animator = null;
+            _animatorController = null;
+            _previewState = null;
+
+            // Dispose of the old PreviewRenderUtility
+            if (_previewRenderUtility != null)
+            {
+                _previewRenderUtility.Cleanup();
+                _previewRenderUtility = null;
+            }
+
+            // Create a new PreviewRenderUtility instance
+            _previewRenderUtility = new PreviewRenderUtility();
+
+            // Reset rotation and playback parameters
+            _rotationY = 0f;
+            _animationSpeed = 0.5f;
+            _isPlaying = true;
+            _isScreenshot = false;
+
+            // Reset the preview texture area
+            _textureRect = new Rect(0, 0, _previewSize.x, _previewSize.y);
+
+            // Unsubscribe from previous MotionData event
+            if (_motionData != null)
+            {
+                _motionData.OnAnimationClipChange -= OnAnimationClipChanged;
+            }
         }
 
         private void OnEnable()
@@ -62,6 +108,8 @@ namespace Dennis.Tools.MotionViewer
             {
                 DestroyImmediate(_previewGO);
             }
+
+            _isLoaded = false;
         }
 
         private void InitializeGUIStyle()
@@ -87,6 +135,8 @@ namespace Dennis.Tools.MotionViewer
 
         private void Initialize(GameObject modelPrefab, MotionData motionData)
         {
+            _isLoaded = true;
+
             InitializeGUIStyle();
 
             _motionData = motionData;
@@ -106,11 +156,9 @@ namespace Dennis.Tools.MotionViewer
             // Setup Animator (with initial clip)
             EnsureAnimatorReady(_motionData.AnimationClip);
 
-            // Start Preview
-            _animator.Play("Preview", 0, 0f);
             _textureRect = new Rect(0, 0, _previewSize.x, _previewSize.y);
 
-            motionData.OnAnimationClipChange += OnAnimationClipChanged;
+            _motionData.OnAnimationClipChange += OnAnimationClipChanged;
         }
 
         public void OnAnimationClipChanged()
@@ -148,6 +196,14 @@ namespace Dennis.Tools.MotionViewer
             if (clip != null)
             {
                 _previewState.motion = clip;
+            }
+
+            // Start Preview
+            if (_animator.runtimeAnimatorController != null)
+            {
+                _animator.Rebind();
+                _animator.Update(0);
+                _animator.Play("Preview", 0, 0f);
             }
         }
 

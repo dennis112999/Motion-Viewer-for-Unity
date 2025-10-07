@@ -81,10 +81,10 @@ namespace Dennis.Tools.MotionViewer
             );
             Add(descField);
 
-            // Create RuntimeAnimatorController ObjectField
-            ObjectField animationField = UIHelper.CreateObjectField<RuntimeAnimatorController>(
-                _motionData.RuntimeAnimatorController,
-                (runtimeAnimatorController) => _motionData.RuntimeAnimatorController = runtimeAnimatorController,
+            // Create AnimationClip ObjectField
+            ObjectField animationField = UIHelper.CreateObjectField<AnimationClip>(
+                _motionData.AnimationClip,
+                (animation) => _motionData.AnimationClip = animation,
                 "motion-clip-field"
             );
             Add(animationField);
@@ -134,11 +134,11 @@ namespace Dennis.Tools.MotionViewer
                 return;
             }
 
-            if (_motionData.RuntimeAnimatorController == null)
+            if (_motionData.AnimationClip == null)
             {
                 EditorUtility.DisplayDialog(
-                    "Missing Animator Controller",
-                    $"Motion '{_motionData.MotionName}' does not have a RuntimeAnimatorController assigned.",
+                    "Missing Animation Clip",
+                    $"Motion '{_motionData.MotionName}' does not have a AnimationClip assigned.",
                     "OK"
                 );
                 return;

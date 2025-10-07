@@ -1,8 +1,7 @@
 ﻿#if UNITY_EDITOR
 
-using UnityEngine;
-
 using UnityEditor;
+using UnityEngine;
 
 namespace Dennis.Tools.MotionViewer
 {
@@ -11,7 +10,7 @@ namespace Dennis.Tools.MotionViewer
     /// </summary>
     public class MotionPreviewWindow : EditorWindow
     {
-        // Preview: Model & Animation
+        // Preview: Model & AnimationClip
         private PreviewRenderUtility _previewRenderUtility;
         private GameObject _previewGO;
         private Animator _animator;
@@ -106,7 +105,15 @@ namespace Dennis.Tools.MotionViewer
                 _animator = _previewGO.AddComponent<Animator>();
             }
 
-            _animator.runtimeAnimatorController = _motionData.RuntimeAnimatorController;
+            // Create temp AnimatorController
+            var controller = new UnityEditor.Animations.AnimatorController();
+            controller.AddLayer("Base Layer");
+            var state = controller.layers[0].stateMachine.AddState("Preview");
+            state.motion = _motionData.AnimationClip;
+            controller.layers[0].stateMachine.defaultState = state;
+
+            _animator.runtimeAnimatorController = controller;
+            _animator.Play("Preview", 0, 0f);
 
             _textureRect = new Rect(0, 0, _previewSize.x, _previewSize.y);
         }

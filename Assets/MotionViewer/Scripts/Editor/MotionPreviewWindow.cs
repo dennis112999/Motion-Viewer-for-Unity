@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace Dennis.Tools.MotionViewer
@@ -14,6 +15,8 @@ namespace Dennis.Tools.MotionViewer
         private PreviewRenderUtility _previewRenderUtility;
         private GameObject _previewGO;
         private Animator _animator;
+        private AnimatorController _animatorController;
+        private AnimatorState _previewState;
         private MotionData _motionData;
 
         // Preview Settings
@@ -33,7 +36,7 @@ namespace Dennis.Tools.MotionViewer
         // Setting
         private string _savePath;
 
-        public static void Open(GameObject modelPrefab, MotionData motionData)
+        public static MotionPreviewWindow Open(GameObject modelPrefab, MotionData motionData)
         {
             var window = CreateInstance<MotionPreviewWindow>();
             window.titleContent = new GUIContent("Motion Preview");
@@ -41,6 +44,7 @@ namespace Dennis.Tools.MotionViewer
             window.maxSize = new Vector2(640, 900);
             window.Initialize(modelPrefab, motionData);
             window.ShowUtility();
+            return window;
         }
 
         private void OnEnable()
@@ -99,24 +103,54 @@ namespace Dennis.Tools.MotionViewer
             _previewRenderUtility.camera.backgroundColor = new Color(0.2f, 0.2f, 0.2f);
             _previewRenderUtility.camera.clearFlags = CameraClearFlags.SolidColor;
 
-            // Setting Animator
-            if (!_previewGO.TryGetComponent<Animator>(out _animator))
+            // Setup Animator (with initial clip)
+            EnsureAnimatorReady(_motionData.AnimationClip);
+
+            // Start Preview
+            _animator.Play("Preview", 0, 0f);
+            _textureRect = new Rect(0, 0, _previewSize.x, _previewSize.y);
+
+            motionData.OnAnimationClipChange += OnAnimationClipChanged;
+        }
+
+        public void OnAnimationClipChanged()
+        {
+            EnsureAnimatorReady(_motionData.AnimationClip);
+
+            // Refresh Animation
+            _animator.Rebind();
+            _animator.Update(0);
+            _animator.Play("Preview", 0, 0f);
+            _animator.Update(0);
+        }
+
+        private void EnsureAnimatorReady(AnimationClip clip = null)
+        {
+            if (_previewGO == null) return;
+
+            if (!_previewGO.TryGetComponent(out _animator))
             {
                 _animator = _previewGO.AddComponent<Animator>();
             }
 
-            // Create temp AnimatorController
-            var controller = new UnityEditor.Animations.AnimatorController();
-            controller.AddLayer("Base Layer");
-            var state = controller.layers[0].stateMachine.AddState("Preview");
-            state.motion = _motionData.AnimationClip;
-            controller.layers[0].stateMachine.defaultState = state;
+            if (_animatorController == null)
+            {
+                _animatorController = new AnimatorController();
+                _animatorController.AddLayer("Base Layer");
 
-            _animator.runtimeAnimatorController = controller;
-            _animator.Play("Preview", 0, 0f);
+                var stateMachine = _animatorController.layers[0].stateMachine;
+                _previewState = stateMachine.AddState("Preview");
+                stateMachine.defaultState = _previewState;
 
-            _textureRect = new Rect(0, 0, _previewSize.x, _previewSize.y);
+                _animator.runtimeAnimatorController = _animatorController;
+            }
+
+            if (clip != null)
+            {
+                _previewState.motion = clip;
+            }
         }
+
 
         private void OnGUI()
         {

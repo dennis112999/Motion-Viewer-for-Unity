@@ -84,7 +84,10 @@ namespace Dennis.Tools.MotionViewer
             // Create AnimationClip ObjectField
             ObjectField animationField = UIHelper.CreateObjectField<AnimationClip>(
                 _motionData.AnimationClip,
-                (animation) => _motionData.AnimationClip = animation,
+                (animation) =>
+                {
+                    _motionData.SetAnimationClip(animation);
+                },
                 "motion-clip-field"
             );
             Add(animationField);

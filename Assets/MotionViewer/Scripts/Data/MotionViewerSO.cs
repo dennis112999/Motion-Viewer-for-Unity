@@ -12,6 +12,14 @@ namespace Dennis.Tools.MotionViewer
         public string Description;
         public AnimationClip AnimationClip;
 
+        public Action OnAnimationClipChange;
+
+        public void SetAnimationClip(AnimationClip newAnimationClip)
+        {
+            AnimationClip = newAnimationClip;
+            OnAnimationClipChange?.Invoke();
+        }
+
         public MotionData(string motionName, string desc, AnimationClip animation = null, Sprite motionPhoto = null)
         {
             MotionPhoto = motionPhoto;

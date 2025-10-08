@@ -138,7 +138,7 @@ namespace Dennis.Tools.MotionViewer
             header.Add(new Label("|"));
             header.Add(CreateHeaderLabel("Description", "motion-header-desc"));
             header.Add(new Label("|"));
-            header.Add(CreateHeaderLabel("Controller", "motion-header-clip"));
+            header.Add(CreateHeaderLabel("Animation Clip", "motion-header-clip"));
             header.Add(new Label("|"));
 
             parent.Add(header);

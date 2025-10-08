@@ -323,6 +323,11 @@ namespace Dennis.Tools.MotionViewer
                 }
             }
 
+            if (GUILayout.Button("Refresh Animation", GUILayout.Width(150)))
+            {
+                OnAnimationClipChanged();
+            }
+
             GUILayout.EndHorizontal();
         }
 
